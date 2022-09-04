@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
   // Your password
   password: "walkerwatt",
 
-  database: "employee_info_DB"
+  database: "employee_info_db"
 });
 
 connection.connect(function(err) {
@@ -89,7 +89,7 @@ function addDepartment() {
 
 
 
-        connection.query("INSERT INTO department (name) VALUES (?)", [answer.deptName] , function(err, res) {
+        connection.query(`INSERT INTO department (dep_name) VALUES (?)`, [answer.deptName] , function(err, res) {
             if (err) throw err;
             console.table(res)
             startScreen()
@@ -120,7 +120,7 @@ function addRole() {
     .then(function(answer) {
 
 
-      connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.roleName, answer.salaryTotal, answer.deptID], function(err, res) {
+      connection.query("INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)", [answer.roleName, answer.salaryTotal, answer.deptID], function(err, res) {
         if (err) throw err;
         console.table(res);
         startScreen();
@@ -134,12 +134,12 @@ function addEmployee() {
       {
         type: "input",
         message: "What's the first name of the employee?",
-        name: "eeFirstName"
+        name: "firstName"
       },
       {
         type: "input",
         message: "What's the last name of the employee?",
-        name: "eeLastName"
+        name: "lastName"
       },
       {
         type: "input",
@@ -155,7 +155,7 @@ function addEmployee() {
     .then(function(answer) {
 
       
-      connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.eeFirstName, answer.eeLastName, answer.roleID, answer.managerID], function(err, res) {
+      connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.firstName, answer.lastName, answer.roleID, answer.managerID], function(err, res) {
         if (err) throw err;
         console.table(res);
         startScreen();
@@ -171,7 +171,7 @@ function updateEmployee() {
       {
         type: "input",
         message: "Which employee would you like to update?",
-        name: "eeUpdate"
+        name: "Update"
       },
 
       {
@@ -181,11 +181,7 @@ function updateEmployee() {
       }
     ])
     .then(function(answer) {
-      // let query = `INSERT INTO department (name) VALUES ("${answer.deptName}")`
-      //let query = `'UPDATE employee SET role_id=${answer.updateRole} WHERE first_name= ${answer.eeUpdate}`;
-      //console.log(query);
-
-      connection.query('UPDATE employee SET role_id=? WHERE first_name= ?',[answer.updateRole, answer.eeUpdate],function(err, res) {
+      connection.query('UPDATE employee SET role_id=? WHERE first_name= ?',[answer.updateRole, answer.Update],function(err, res) {
         if (err) throw err;
         console.table(res);
         startScreen();
@@ -206,7 +202,7 @@ function viewDepartment() {
 
 function viewRoles() {
   // select from the db
-  let query = "SELECT * FROM role";
+  let query = "SELECT * FROM roles";
   connection.query(query, function(err, res) {
     if (err) throw err;
     console.table(res);
