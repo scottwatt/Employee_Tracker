@@ -21,12 +21,13 @@ connection.connect(function(err) {
   console.log("connected as id " + connection.threadId);
 
   startScreen();
-  //  connection.end();//
+  //  go to start screen
 });
 
-//What the user will first see once logged into node
+//What the user will first see 
 function startScreen() {
   inquirer
+    // list of options 
     .prompt({
       type: "list",
       choices: [
@@ -45,6 +46,7 @@ function startScreen() {
     .then(function(result) {
       console.log("You entered: " + result.option);
 
+      // switch case that has corresponding functions
       switch (result.option) {
         case "Add department":
           addDepartment();
@@ -74,8 +76,7 @@ function startScreen() {
 }
 
 
-//All of the corresponding functions found below
-
+// creates a department
 function addDepartment() {
 
 
@@ -98,6 +99,7 @@ function addDepartment() {
 }
 
 
+// adds a role 
 function addRole() {
   inquirer
     .prompt([
@@ -128,6 +130,7 @@ function addRole() {
     });
 }
 
+// adds an employee 
 function addEmployee() {
   inquirer
     .prompt([
@@ -147,9 +150,17 @@ function addEmployee() {
         name: "roleID"
       },
       {
+        type: "confirm",
+        message: "Is this employee a manager?",
+        name: "isManager"
+      },
+      {
         type: "input",
-        message: "What is the manager id number?",
-        name: "managerID"
+        message: "What is the Manager's id number?",
+        name: "managerID",
+        when(answer) {
+          return answer.isManager;
+        }
       }
     ])
     .then(function(answer) {
@@ -163,8 +174,7 @@ function addEmployee() {
     });
 }
 
-//Since we're using inquirer, we can pass the query into the method as an array
-
+// updates an employees role id 
 function updateEmployee() {
   inquirer
     .prompt([
@@ -190,36 +200,36 @@ function updateEmployee() {
 }
 
 function viewDepartment() {
-  // select from the db
+  // select and show department in a table from the db
   let query = "SELECT * FROM department";
   connection.query(query, function(err, res) {
     if (err) throw err;
     console.table(res);
     startScreen();
   });
-  // show the result to the user (console.table)
+ 
 }
 
 function viewRoles() {
-  // select from the db
+  // select and show roles in a table from the db
   let query = "SELECT * FROM roles";
   connection.query(query, function(err, res) {
     if (err) throw err;
     console.table(res);
     startScreen();
   });
-  // show the result to the user (console.table)
+ 
 }
 
 function viewEmployees() {
-  // select from the db
+  // select and show employee in a table from the db
   let query = "SELECT * FROM employee";
   connection.query(query, function(err, res) {
     if (err) throw err;
     console.table(res);
     startScreen();
   });
-  // show the result to the user (console.table)
+ 
 }
 
 function quit() {

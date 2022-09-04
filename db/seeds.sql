@@ -1,5 +1,5 @@
 
-
+-- marvel seeds 
 INSERT INTO department (dep_name)
 VALUES ("Student"), ("Asgard"), ("Engineering"), ("Leader"), ("Stealth");
 
