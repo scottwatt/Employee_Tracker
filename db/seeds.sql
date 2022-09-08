@@ -7,4 +7,4 @@ INSERT INTO roles (title, salary, department_id)
 VALUE ("Superhero", 25000.00, 2), ("God", 600000.00, 3), ("Engineer", 600000.00, 4), ("Captain", 200000.00, 1), ("Assassin", 800000.00, 5);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUE ("Peter", "Parker", 1, 3), ("Thor", "God of Thunder", 1, 1), ("Tony", "Stark", 3, 2), ("Steve", "Rogers", 5, 2), ("Natasha", "Romanova", 5, 2);
+VALUE ("Peter", "Parker", 1, 0), ("Thor", "God of Thunder", 1, 1), ("Tony", "Stark", 3, 1), ("Steve", "Rogers", 5, 1), ("Natasha", "Romanova", 5, 0);

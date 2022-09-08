@@ -9,7 +9,7 @@ const connection = mysql.createConnection({
   // Your username
   user: "root",
   
-  port: 3306,
+  port: 3001,
   // Your password
   password: "walkerwatt",
 
@@ -38,6 +38,11 @@ function startScreen() {
         "View roles",
         "View employees",
         "Update employee role",
+        "View employee's manager",
+        // "View salaries",
+        "Delete employee",
+        "Delete role",
+        "Delete department",
         "Quit"
       ],
       message: "What would you like to do?",
@@ -69,12 +74,26 @@ function startScreen() {
         case "Update employee role":
           updateEmployee();
           break;
+        case "View employee's manager":
+          viewManagers();
+          break;
+        // case "View total salaries":
+        //   viewSalaries();
+        //   break;  
+        case "Delete employee":
+          deleteEmployee();
+          break;
+        case "Delete role":
+          deleteRole();
+          break;
+        case "Delete department":
+          deleteDepartment();
+          break;      
         default:
           quit();
       }
     });
 }
-
 
 // creates a department
 function addDepartment() {
@@ -150,23 +169,15 @@ function addEmployee() {
         name: "roleID"
       },
       {
-        type: "confirm",
-        message: "Is this employee a manager?",
+        type: "input",
+        message: "What is the employee's manager id?",
         name: "isManager"
       },
-      {
-        type: "input",
-        message: "What is the Manager's id number?",
-        name: "managerID",
-        when(answer) {
-          return answer.isManager;
-        }
-      }
     ])
     .then(function(answer) {
 
       
-      connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.firstName, answer.lastName, answer.roleID, answer.managerID], function(err, res) {
+      connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.firstName, answer.lastName, answer.roleID, answer.isManager], function(err, res) {
         if (err) throw err;
         console.table(res);
         startScreen();
@@ -231,6 +242,95 @@ function viewEmployees() {
   });
  
 }
+
+// view employees with same manager 
+function viewManagers() {
+  inquirer
+  .prompt([
+    {
+      type: "input",
+      name: "viewManager",
+      message: "What is this employee's manager id?"
+    }
+  ])
+  .then(function (answer){
+    connection.query(`SELECT * FROM employee WHERE manager_id = ?`, [answer.viewManager] , function(err, res) {
+      if (err) throw err;
+      console.table(res);
+      startScreen();
+    });
+  });
+}
+
+// function viewSalaries() {
+//   let query = "SELECT SUM(salary) AS sum_salary FROM roles";
+//   connection.query(query, function(err, res) {
+//     if (err) throw err;
+//     console.table(res);
+//     startScreen();
+//   });
+// } 
+
+
+// deletes employee based off id given 
+function deleteEmployee() {
+  inquirer
+  .prompt([
+      {
+        type: "input",
+        name: "employeeId",
+        message: "Which employee do you want to remove by id?",
+      }
+    ])
+    .then(function (answer){
+      connection.query(`DELETE FROM employee WHERE id = ?;`, [answer.employeeId] , function(err, res){
+        if (err) throw err;
+        console.table(res);
+        console.log(res.affectedRows + " Deleted!\n");
+        startScreen();
+      });
+    });
+  }
+
+//  deletes role based of id given  
+function deleteRole() {
+  inquirer
+  .prompt([
+      {
+        type: "input",
+        name: "roleId",
+        message: "Which role do you want to remove by id?",
+      }
+    ])
+    .then(function (answer){
+      connection.query(`DELETE FROM employee WHERE id = ?;`, [answer.roleId] , function(err, res){
+        if (err) throw err;
+        console.table(res);
+        console.log(res.affectedRows + " Deleted!\n");
+        startScreen();
+      });
+    });
+  }
+
+  // deletes department based off of id given
+function deleteDepartment() {
+  inquirer
+  .prompt([
+      {
+        type: "input",
+        name: "departmentId",
+        message: "Which department do you want to remove by id?",
+      }
+    ])
+    .then(function (answer){
+      connection.query(`DELETE FROM employee WHERE id = ?;`, [answer.departmentId] , function(err, res){
+        if (err) throw err;
+        console.table(res);
+        console.log(res.affectedRows + " Deleted!\n");
+        startScreen();
+      });
+    });
+  }
 
 function quit() {
   connection.end();
