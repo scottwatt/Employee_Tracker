@@ -9,7 +9,7 @@ const connection = mysql.createConnection({
   // Your username
   user: "root",
   
-  port: 3001,
+  port: 3306,
   // Your password
   password: "walkerwatt",
 
@@ -39,7 +39,7 @@ function startScreen() {
         "View employees",
         "Update employee role",
         "View employee's manager",
-        // "View salaries",
+        "View salaries",
         "Delete employee",
         "Delete role",
         "Delete department",
@@ -77,9 +77,9 @@ function startScreen() {
         case "View employee's manager":
           viewManagers();
           break;
-        // case "View total salaries":
-        //   viewSalaries();
-        //   break;  
+        case "View salaries":
+          viewSalaries();
+          break;  
         case "Delete employee":
           deleteEmployee();
           break;
@@ -262,14 +262,24 @@ function viewManagers() {
   });
 }
 
-// function viewSalaries() {
-//   let query = "SELECT SUM(salary) AS sum_salary FROM roles";
-//   connection.query(query, function(err, res) {
-//     if (err) throw err;
-//     console.table(res);
-//     startScreen();
-//   });
-// } 
+function viewSalaries() {
+  inquirer
+  .prompt([
+    {
+      type: 'input',
+      name: 'deptId',
+      message: "Select which department's total salary you choose to view"
+    }
+  ])
+  .then(function(answer){
+  
+  connection.query("SELECT title, SUM(salary) AS total_salary FROM roles JOIN employee ON roles.id = employee.role_id WHERE department_id = ?", [answer.deptId], function(err, res) {
+    if (err) throw err;
+    console.table(res);
+    startScreen();
+  });
+ });
+} 
 
 
 // deletes employee based off id given 
@@ -303,7 +313,7 @@ function deleteRole() {
       }
     ])
     .then(function (answer){
-      connection.query(`DELETE FROM employee WHERE id = ?;`, [answer.roleId] , function(err, res){
+      connection.query(`DELETE FROM roles WHERE id = ?;`, [answer.roleId] , function(err, res){
         if (err) throw err;
         console.table(res);
         console.log(res.affectedRows + " Deleted!\n");
@@ -323,7 +333,7 @@ function deleteDepartment() {
       }
     ])
     .then(function (answer){
-      connection.query(`DELETE FROM employee WHERE id = ?;`, [answer.departmentId] , function(err, res){
+      connection.query(`DELETE FROM department WHERE id = ?;`, [answer.departmentId] , function(err, res){
         if (err) throw err;
         console.table(res);
         console.log(res.affectedRows + " Deleted!\n");
