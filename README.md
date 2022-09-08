@@ -54,5 +54,5 @@ This challenge features Javascript and MYSQL
 This application was tested using NPM start and MYSQL Workbench.
 
 ## Deployed App
-![video](https://drive.google.com/file/d/1EqUprC4UiR9cDdDAQJO6PGy7MZ85oz1g/view?usp=sharing)
+[Demo](https://drive.google.com/file/d/1EqUprC4UiR9cDdDAQJO6PGy7MZ85oz1g/view?usp=sharing)
 
